@@ -10,9 +10,13 @@ export type State = {
   readonly book: OrderBook;
 }
 
-const initialState: State = {
+export const initialState: State = {
   book: {
-    orders: [],
+    orders: [
+      { id: 1, price: 100, quantity: 30, symbol: 'GOOG', type: OrderType.Ask, timestamp: new Date() },
+      { id: 2, price: 90, quantity: 30, symbol: 'GOOG', type: OrderType.Bid, timestamp: new Date() },
+      { id: 2, price: 200, quantity: 50, symbol: 'AAPL', type: OrderType.Bid, timestamp: new Date() },
+    ],
     transactions: [],
   }
 };
