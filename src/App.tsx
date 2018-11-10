@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {ScreenContainerComponent} from './components/screen.container.component';
+import {Screen} from './orderbook/components/screen.component';
 
 class App extends Component {
   render() {
     return (
-      <ScreenContainerComponent></ScreenContainerComponent>
+      <Screen></Screen>
     );
   }
 }

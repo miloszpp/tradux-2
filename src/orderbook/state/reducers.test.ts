@@ -1,9 +1,9 @@
 import React from 'react';
-import {State, reducer} from './reducers';
-import {OrderType, Order} from './types';
+import {OrderBookState, orderBookReducer} from './reducers';
+import {OrderType, Order} from '../model';
 
 it('matches exactly opposite order', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ sampleOrder({ type: OrderType.Bid }) ],
       transactions: [],
@@ -11,14 +11,14 @@ it('matches exactly opposite order', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(0);
   expect(transactions.length).toBe(1);
 });
 
 it('matches inexhaustive order', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ 
         sampleOrder({ type: OrderType.Bid, quantity: 100 }),
@@ -29,7 +29,7 @@ it('matches inexhaustive order', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask, quantity: 150 });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(1);
   expect(orders[0].quantity).toBe(50);
@@ -37,7 +37,7 @@ it('matches inexhaustive order', () => {
 });
 
 it('matches exhaustive order', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ 
         sampleOrder({ type: OrderType.Bid, quantity: 200 }),
@@ -47,7 +47,7 @@ it('matches exhaustive order', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask, quantity: 150 });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(1);
   expect(orders[0].quantity).toBe(50);
@@ -55,7 +55,7 @@ it('matches exhaustive order', () => {
 });
 
 it('does not match if price too high', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ 
         sampleOrder({ type: OrderType.Bid, price: 19 }),
@@ -65,14 +65,14 @@ it('does not match if price too high', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask, price: 20 });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(2);
   expect(transactions.length).toBe(0);
 });
 
 it('does not match if symbol doesnt match', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ 
         sampleOrder({ type: OrderType.Bid, price: 21, symbol: 'A' }),
@@ -82,14 +82,14 @@ it('does not match if symbol doesnt match', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask, price: 20, symbol: 'B' });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(2);
   expect(transactions.length).toBe(0);
 });
 
 it('matches several orders', () => {
-  const state: State = {
+  const state: OrderBookState = {
     book: {
       orders: [ 
         sampleOrder({ type: OrderType.Bid, price: 19, symbol: 'A' }),
@@ -102,7 +102,7 @@ it('matches several orders', () => {
   };
   const newOrder: Order = sampleOrder({ type: OrderType.Ask, price: 20, symbol: 'A', quantity: 350 });
 
-  const { book: { orders, transactions } } = reducer(state, { type: '@@orderbook/put', payload: newOrder });
+  const { book: { orders, transactions } } = orderBookReducer(state, { type: '@@orderbook/put', payload: newOrder });
 
   expect(orders.length).toBe(2);
   expect(transactions.length).toBe(3);

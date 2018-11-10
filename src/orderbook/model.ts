@@ -1,5 +1,5 @@
 export enum OrderType {
-  Bid, 
+  Bid,
   Ask
 };
 
@@ -24,4 +24,11 @@ export interface Transaction {
 export interface OrderBook {
   orders: Order[];
   transactions: Transaction[];
+}
+
+export interface OrderScreen {
+  [symbol: string]: {
+    bid: Order[],
+    ask: Order[],
+  }
 }

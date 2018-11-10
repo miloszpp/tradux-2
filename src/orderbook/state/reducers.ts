@@ -1,16 +1,16 @@
-import {OrderBook, Order, OrderType, Transaction} from './types';
+import {OrderBook, Order, OrderType, Transaction} from '../model';
 import * as actions from './actions';
 import {ActionType} from 'typesafe-actions';
 import {PUT_ORDER} from './constants';
 import {find, filter, sortBy, prop, findLast, pipe, eqProps, reject, evolve, identity, update, indexOf, remove, curry, concat} from 'ramda';
 
-export type Action = ActionType<typeof actions>;
+export type OrderBookAction = ActionType<typeof actions>;
 
-export type State = {
+export type OrderBookState = {
   readonly book: OrderBook;
 }
 
-export const initialState: State = {
+export const initialState: OrderBookState = {
   book: {
     orders: [
       { id: 1, price: 100, quantity: 30, symbol: 'GOOG', type: OrderType.Ask, timestamp: new Date() },
@@ -100,7 +100,7 @@ const matchOrder = curry((currentOrder: Order, book: OrderBook): OrderBook => {
   return matchAnyOrder(currentOrder, matching, matchingIndex)(book);
 });
 
-export const reducer = (state: State = initialState, action: Action): State => {
+export const orderBookReducer = (state: OrderBookState = initialState, action: OrderBookAction): OrderBookState => {
   switch (action.type) {
     case PUT_ORDER:
       return evolve({

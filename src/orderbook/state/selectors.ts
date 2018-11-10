@@ -1,17 +1,22 @@
-import { createSelector } from 'reselect';
-import {State} from './reducers';
-import {OrderBook, Order, OrderType} from './types';
-import {prop, groupBy, mapObjIndexed, sort, filter, eqProps, sortBy, pipe, reverse, take, propEq} from 'ramda';
+import {createSelector} from 'reselect';
+import {Order, OrderType} from '../model';
+import {prop, groupBy, mapObjIndexed, filter, sortBy, reverse, take, propEq} from 'ramda';
+import {State} from '../../store';
 
-const bookSelector = (state: State) => state.book;
+const getOrderBookState = (state: State) => state.orderBook;
 
-const ordersSelector = createSelector(
-  bookSelector,
-  prop<'orders', Order[]>('orders'),
+const getOrderBook = createSelector(
+  getOrderBookState,
+  (orderBookState) => orderBookState.book
 );
 
-export const screenSelector = createSelector(
-  ordersSelector,
+const getOrders = createSelector(
+  getOrderBook,
+  (orderBook) => orderBook.orders,
+);
+
+export const getScreen = createSelector(
+  getOrders,
   (orders) => {
     const groupedBySymbol = groupBy(prop<'symbol', string>('symbol'), orders);
     return mapObjIndexed((symbolOrders, {}, {}) => {
@@ -24,4 +29,4 @@ export const screenSelector = createSelector(
       }
     }, groupedBySymbol);
   }
-)
+);

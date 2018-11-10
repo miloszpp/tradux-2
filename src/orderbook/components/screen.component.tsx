@@ -1,17 +1,13 @@
 import React from 'react';
-import {Order} from '../state/types';
+import {Order, OrderScreen} from '../model';
 import {keysIn, head} from 'ramda';
 import {connect} from 'react-redux';
-import {screenSelector} from '../state/selectors';
-import {State} from '../state/reducers';
+import {getScreen} from '../state/selectors';
+import {OrderBookState} from '../state/reducers';
+import {State} from '../../store';
 
 export interface ScreenProps {
-  orders: {
-    [symbol: string]: {
-      bid: Order[],
-      ask: Order[],
-    }
-  }
+  screen: OrderScreen;
 }
 
 const screenComponent: React.SFC<ScreenProps> = (props: ScreenProps) => {
@@ -25,10 +21,10 @@ const screenComponent: React.SFC<ScreenProps> = (props: ScreenProps) => {
         </tr>
       </thead>
       <tbody>
-        {keysIn(props.orders).map((symbol) => <tr key={symbol}>
+        {keysIn(props.screen).map((symbol) => <tr key={symbol}>
           <td>{symbol}</td>
-          <td>{singleOrder(props.orders[symbol].bid)}</td>
-          <td>{singleOrder(props.orders[symbol].ask)}</td>
+          <td>{singleOrder(props.screen[symbol].bid)}</td>
+          <td>{singleOrder(props.screen[symbol].ask)}</td>
         </tr>)}
       </tbody>
     </table>
@@ -40,10 +36,10 @@ function singleOrder(orders: Order[]) {
   return first ? first.price : '-';
 }
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: State): ScreenProps => {
   return {
-    orders: screenSelector(state)
+    screen: getScreen(state)
   };
 };
 
-export const ScreenComponent = connect(mapStateToProps)(screenComponent);
+export const Screen = connect(mapStateToProps)(screenComponent);
