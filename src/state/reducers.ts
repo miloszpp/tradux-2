@@ -2,7 +2,7 @@ import {OrderBook, Order, OrderType, Transaction} from './types';
 import * as actions from './actions';
 import {ActionType} from 'typesafe-actions';
 import {PUT_ORDER} from './constants';
-import {map, find, filter, sort, sortBy, prop, findLast, pipe, eqProps, reject, evolve, identity, reduce, update, indexOf, remove, append, curry, concat, Evolver, useWith, converge, tap} from 'ramda';
+import {find, filter, sortBy, prop, findLast, pipe, eqProps, reject, evolve, identity, update, indexOf, remove, curry, concat} from 'ramda';
 
 export type Action = ActionType<typeof actions>;
 
@@ -80,20 +80,15 @@ const matchAnyOrder = curry((
       return matchExhaustiveOrder(currentOrder, matchingOrder, matchingOrderIndex);
     }
   } else {
-    return identity;
+    if (currentOrder.quantity > 0 ) {
+      return evolve({
+        orders: concat([currentOrder]),
+      });
+    } else {
+      return identity;
+    }
   }
 });
-
-// const matchOrder = (currentOrder: Order): OrderBookFn => {
-//   return converge(
-//     matchAnyOrder(currentOrder),
-//     [
-//       pipe(prop<'orders', Order[]>('orders'), findMatchingOrder(currentOrder)),
-//       pipe(prop<'orders', Order[]>('orders'), findMatchingOrder(currentOrder), indexOf),
-//       identity,
-//     ]
-//   );
-// };
 
 const matchOrder = curry((currentOrder: Order, book: OrderBook): OrderBook => {
   const matching = findMatchingOrder(currentOrder)(book.orders);
@@ -111,7 +106,3 @@ export const reducer = (state: State = initialState, action: Action): State => {
       return state;
   }
 }
-
-
-// ask -> sprzedam za value
-// bid -> kupie za valkue
