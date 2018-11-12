@@ -1,32 +1,31 @@
 import {createSelector} from 'reselect';
-import {Order, OrderType} from '../model';
-import {prop, groupBy, mapObjIndexed, filter, sortBy, reverse, take, propEq} from 'ramda';
-import {State} from '../../store';
+import {Order, OrderType, OrderScreenSymbol, OrderBook} from '../model';
+import {prop, groupBy, mapObjIndexed, filter, sortBy, reverse, take, propEq, pipe} from 'ramda';
+import {OrderBookState} from './reducers';
 
-const getOrderBookState = (state: State) => state.orderBook;
+const getOrderBookState = prop<'orderBook', OrderBookState>('orderBook');
 
 const getOrderBook = createSelector(
   getOrderBookState,
-  (orderBookState) => orderBookState.book
+  prop<'book', OrderBook>('book'),
 );
 
 const getOrders = createSelector(
   getOrderBook,
-  (orderBook) => orderBook.orders,
+  prop<'orders', Order[]>('orders'),
 );
 
 export const getScreen = createSelector(
   getOrders,
-  (orders) => {
-    const groupedBySymbol = groupBy(prop<'symbol', string>('symbol'), orders);
-    return mapObjIndexed((symbolOrders, {}, {}) => {
+  pipe(
+    groupBy<Order>(prop<'symbol', string>('symbol')),
+    mapObjIndexed<Order[], OrderScreenSymbol>((symbolOrders) => {
       const bidOrders = filter<Order>(propEq('type', OrderType.Bid), symbolOrders);
       const askOrders = filter<Order>(propEq('type', OrderType.Ask), symbolOrders);
-      console.log(bidOrders);
       return {
         bid: take(5, reverse(sortBy(prop<'price', number>('price'), bidOrders))),
         ask: take(5, sortBy(prop<'price', number>('price'), askOrders)),
       }
-    }, groupedBySymbol);
-  }
+    }),
+  )
 );

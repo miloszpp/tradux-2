@@ -26,9 +26,11 @@ export interface OrderBook {
   transactions: Transaction[];
 }
 
+export interface OrderScreenSymbol {
+  bid: Order[],
+  ask: Order[],
+}
+
 export interface OrderScreen {
-  [symbol: string]: {
-    bid: Order[],
-    ask: Order[],
-  }
+  [symbol: string]: OrderScreenSymbol,
 }

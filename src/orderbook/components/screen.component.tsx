@@ -3,7 +3,6 @@ import {Order, OrderScreen} from '../model';
 import {keysIn, head} from 'ramda';
 import {connect} from 'react-redux';
 import {getScreen} from '../state/selectors';
-import {OrderBookState} from '../state/reducers';
 import {State} from '../../store';
 
 export interface ScreenProps {
