@@ -37,7 +37,7 @@ const findMatchingOrder = (current: Order) =>
 
 const matchNonExhaustiveOrder = (current: Order, matching: Order): OrderBookFn => {
   const quantity = matching.quantity - current.quantity;
-  const transaction = makeTransaction(current, matching, quantity);
+  const transaction = makeTransaction(current, matching, current.quantity);
   return evolve({
     orders: replace(matching, {...matching, quantity}),
     transactions: concat([transaction]), // NOTE append(transaction) doesn't Type correctly
@@ -46,7 +46,7 @@ const matchNonExhaustiveOrder = (current: Order, matching: Order): OrderBookFn =
 
 const matchExhaustiveOrder = (current: Order, matching: Order): OrderBookFn => {
   const quantity = current.quantity - matching.quantity;
-  const transaction = makeTransaction(current, matching, quantity);
+  const transaction = makeTransaction(current, matching, matching.quantity);
   const updatedOrder = {...current, quantity};
   return pipe(
     evolve({
