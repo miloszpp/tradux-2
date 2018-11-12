@@ -23,15 +23,15 @@ const screenComponent: React.SFC<ScreenProps> = (props: ScreenProps) => {
       <tbody>
         {keysIn(props.screen).map((symbol) => <tr key={symbol}>
           <td>{symbol}</td>
-          <td>{singleOrder(props.screen[symbol].bid)}</td>
-          <td>{singleOrder(props.screen[symbol].ask)}</td>
+          <td>{priceOfFirst(props.screen[symbol].bid)}</td>
+          <td>{priceOfFirst(props.screen[symbol].ask)}</td>
         </tr>)}
       </tbody>
     </table>
   );
 };
 
-function singleOrder(orders: Order[]) {
+function priceOfFirst(orders: Order[]) {
   const first = head(orders);
   return first ? first.price : '-';
 }

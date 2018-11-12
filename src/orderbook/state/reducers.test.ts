@@ -108,8 +108,10 @@ it('matches several orders', () => {
   expect(transactions.length).toBe(3);
 });
 
+let index = 0;
+
 function sampleOrder({
-  id = 2,
+  id = index++,
   price = 100,
   quantity = 10,
   symbol = 'GOOG',
