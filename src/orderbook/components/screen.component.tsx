@@ -22,17 +22,17 @@ const screenComponent: React.SFC<ScreenProps> = (props: ScreenProps) => {
       <tbody>
         {keysIn(props.screen).map((symbol) => <tr key={symbol}>
           <td>{symbol}</td>
-          <td>{priceOfFirst(props.screen[symbol].bid)}</td>
-          <td>{priceOfFirst(props.screen[symbol].ask)}</td>
+          <td>{renderFirst(props.screen[symbol].bid)}</td>
+          <td>{renderFirst(props.screen[symbol].ask)}</td>
         </tr>)}
       </tbody>
     </table>
   );
 };
 
-function priceOfFirst(orders: Order[]) {
+function renderFirst(orders: Order[]) {
   const first = head(orders);
-  return first ? first.price : '-';
+  return first ? `${first.price} (${first.quantity})` : '-';
 }
 
 const mapStateToProps = (state: State): ScreenProps => {
