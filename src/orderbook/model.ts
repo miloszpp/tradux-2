@@ -34,3 +34,12 @@ export interface OrderScreenSymbol {
 export interface OrderScreen {
   [symbol: string]: OrderScreenSymbol,
 }
+
+export interface PutOrderPayload {
+  symbol: string;
+  price: number;
+  quantity: number;
+  type: OrderType;
+}
+
+export const SYMBOLS = ['GOOG', 'AAPL', 'MSFT'];

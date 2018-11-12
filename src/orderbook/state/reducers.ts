@@ -2,7 +2,7 @@ import {OrderBook, Order, OrderType, Transaction} from '../model';
 import * as actions from './actions';
 import {ActionType} from 'typesafe-actions';
 import {PUT_ORDER} from './constants';
-import {find, filter, sortBy, prop, findLast, pipe, eqProps, reject, evolve, identity, update, indexOf, remove, curry, concat, converge, assoc, findIndex, without, uncurryN} from 'ramda';
+import {find, filter, sortBy, prop, findLast, pipe, eqProps, reject, evolve, identity, update, indexOf, remove, curry, concat, converge, assoc, findIndex, without, uncurryN, maxBy, map, last, defaultTo} from 'ramda';
 import {replace} from '../util/array';
 import {makeTransaction} from '../util/transaction';
 
@@ -79,7 +79,13 @@ const findAndMatchOrder = (current: Order): OrderBookFn =>
 export const orderBookReducer = (state: OrderBookState = initialState, action: OrderBookAction): OrderBookState => {
   switch (action.type) {
     case PUT_ORDER:
-      return evolve({ book: findAndMatchOrder(action.payload) }, state);
+      const lastOrder = last(state.book.orders);
+      const order = { 
+        ...action.payload,
+        timestamp: new Date(),
+        id: lastOrder ? lastOrder.id + 1 : 1,
+      };
+      return evolve({ book: findAndMatchOrder(order) }, state);
     default:
       return state;
   }
