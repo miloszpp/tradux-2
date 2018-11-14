@@ -1,4 +1,10 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Tradux2: functional, pointfree toy trading engine
+
+This project is a demonstration of functional programming principles applied to a modern web application.
+
+It's based on **redux** architecture with portions of code written in **pointfree** style.
+
+The application implements a simple trading engine. User can create an order specifying stock symbol, price, quantity and order type (bid or ask). The order is then matched agains existing order book. If a match is found, a new transaction is created and displayed on the screen.
 
 ## Available Scripts
 
